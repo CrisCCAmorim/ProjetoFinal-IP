@@ -23,8 +23,11 @@ pygame.display.set_caption('Eu <3 o Recife')
 sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens,'sprite-sheet-tuba.png')).convert_alpha()
 
 class Tuba(pygame.sprite.Sprite):
+    VELOC_PULO = 8.5
+    
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+        self.veloc_pulo = self.VELOC_PULO
         self.imagens_tuba = []
         for i in range(3):
             img = sprite_sheet.subsurface((i*300,0),(300,300))
@@ -35,21 +38,19 @@ class Tuba(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (500,500)
         self.pulo = False
-        self.posicao_y_inicial = 500-150
+        self.posicao_y_inicial = 350
 
     def pular(self):
         self.pulo = True
 
     def update(self):
         if self.pulo == True:
-            if self.rect.y <= 200:
-                self.pulo = False
-            self.rect.y -=20
-        else:
-            if self.rect.y < self.posicao_y_inicial:
-                self.rect.y += 20
-            else:
-                self.rect.y = self.posicao_y_inicial
+            self.rect.y -= self.veloc_pulo * 4
+            self.veloc_pulo -= 0.8 
+        if self.veloc_pulo < - self.VELOC_PULO:
+            self.pulo = False
+            self.veloc_pulo = self.VELOC_PULO
+            self.rect.y = self.posicao_y_inicial
 
         self.index_lista += 0.40
         if self.index_lista >2:
