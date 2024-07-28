@@ -1,42 +1,37 @@
-#Importam o módulo principal do Pygame e constantes necessárias.
 import pygame
 from pygame.locals import *
 from sys import exit
 import os
 import math
 
-#definição dos diretórios
 diretorio_principal = os.path.dirname(__file__)
 diretorio_imagens = os.path.join(diretorio_principal,'imagens')
 diretorio_sons = os.path.join(diretorio_principal,'sons')
 
-#iniciando pygame
 pygame.init()
 
-# Criando a tela
+# Criando a tela e suas configurações
 altura_tela = 692
 largura_tela = 1366
 dimensoes_tela=(largura_tela,altura_tela)
 tela = pygame.display.set_mode(dimensoes_tela)
 pygame.display.set_caption('Eu <3 o Recife')
 
-# Criando a sprite do jogador (Carrega a imagem da sprite do jogador.)
+# Criando a sprite do jogador
 sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens,'sprite-sheet-tuba.png')).convert_alpha()
 
-# Criando o cenário de fundo (Carrega a imagem do cenário de fundo.)
+# Criando o cenário de fundo
 bg_image = pygame.image.load(os.path.join(diretorio_imagens,'bg-cenario.png'))
 bg_width = bg_image.get_width()
 
-# Função para mostrar a quantidade de vidas na tela, define a fonte e a cor do texto
+# Função para mostrar a quantidade de vidas na tela
 text_font = pygame.font.SysFont("Comic Sans MS",40)
 text_color = (202,18,4)
-
-# Função que renderiza e desenha texto na tela.
 def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
     tela.blit(img, (x,y))
 
-# classe, atributos e métodos da spritesheet
+
 class Tuba(pygame.sprite.Sprite):
     VELOC_PULO = 8.5
     
@@ -55,7 +50,6 @@ class Tuba(pygame.sprite.Sprite):
         self.pulo = False
         self.posicao_y_inicial = 350
 
-    # Método que atualiza a posição da sprite baseado no pulo e anima a sprite.
     def pular(self):
         self.pulo = True
 
@@ -87,7 +81,7 @@ def main():
     ponte_final=5
     vidas = 3
     
-    #loop principal  
+        
     while run:
         relogio.tick(30)
         
