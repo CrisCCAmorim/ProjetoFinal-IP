@@ -18,13 +18,16 @@ altura_tela = 692
 largura_tela = 1366
 dimensoes_tela = (largura_tela, altura_tela)
 tela = pygame.display.set_mode(dimensoes_tela)
-pygame.display.set_caption('Eu <3 o Recife')
+pygame.display.set_caption('Recin RUN!')
 
 # Criando a sprite do jogador
 sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'sprite-sheet-tuba.png')).convert_alpha()
 
 # Criando a sprite do jogador abaixando
 tuba_agachando = pygame.image.load(os.path.join(diretorio_imagens, 'sprite-sheet-tuba-agachado.png')).convert_alpha()
+
+# Criando os Coletaveis
+boloderolo = pygame.image.load(os.path.join(diretorio_imagens, 'boloderolo_animacao.png'))
 
 # Criando o cenário de fundo
 bg_image = pygame.image.load(os.path.join(diretorio_imagens, 'bg-cenario.png'))
@@ -38,6 +41,15 @@ text_color = (202, 18, 4)
 def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
     tela.blit(img, (x, y))
+
+class Bolo(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.boloderolo_animacao = []
+        for i in range(6):
+            img = boloderolo.subsurface((i*100, 0), (100, 100))
+            self.boloderolo_animacao.append(img)
+
 
 
 class Tuba(pygame.sprite.Sprite):
@@ -108,6 +120,9 @@ def main():
     sprites_player = pygame.sprite.Group()
     jogador = Tuba()
     sprites_player.add(jogador)
+    bolo_de_rolo = Bolo()
+    sprites_player.add(bolo_de_rolo)
+
     run = True
     relogio = pygame.time.Clock()
     scroll = 0
