@@ -52,6 +52,7 @@ class Bolo(pygame.sprite.Sprite):
 
 
 
+
 class Tuba(pygame.sprite.Sprite):
     VELOC_PULO = 8.5
 
