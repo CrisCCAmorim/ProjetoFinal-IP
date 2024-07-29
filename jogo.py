@@ -57,6 +57,7 @@ class Bolo(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (100, 100)
 
+
     def update(self):
         self.index += 0.1
         if self.index >= len(self.boloderolo_animacao):
