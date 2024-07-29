@@ -17,7 +17,10 @@ pygame.init()
 #sons
 som_agachar = pygame.mixer.Sound(os.path.join(diretorio_sons,'agachar.wav'))
 som_pulo = pygame.mixer.Sound(os.path.join(diretorio_sons,'pulo.wav'))
-
+som_buff = pygame.mixer.Sound(os.path.join(diretorio_sons,'coletar.wav'))
+som_debuff = pygame.mixer.Sound(os.path.join(diretorio_sons, 'coleta_ruim2.wav'))
+som_vitoria = pygame.mixer.Sound(os.path.join(diretorio_sons,'success-fanfare-trumpets-6185(1).wav'))
+#som_perder = pygame.mixer.Sound(os.path.join(diretorio_sons, ''))
 
 #musica de fundo 
 #musica_fundo = pygame.mixer.music.load(os.path.join(diretorio_sons, 'musica_fundo.mp3'))
