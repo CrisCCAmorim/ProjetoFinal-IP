@@ -14,7 +14,16 @@ diretorio_sons = os.path.join(diretorio_principal, 'sons')
 #iniciando pygame
 pygame.init()
 
+#sons
+som_agachar = pygame.mixer.Sound(os.path.join(diretorio_sons,'agachar.wav'))
+som_pulo = pygame.mixer.Sound(os.path.join(diretorio_sons,'pulo.wav'))
+
+
+#musica de fundo 
+#musica_fundo = pygame.mixer.music.load(os.path.join(diretorio_sons, 'musica_fundo.mp3'))
+#pygame.mixer.music.play(-1)
 # Criando a tela e suas configurações
+
 altura_tela = 692
 largura_tela = 1366
 dimensoes_tela = (largura_tela, altura_tela)
@@ -183,9 +192,12 @@ def main():
             keys_pressed = pygame.key.get_pressed()
             if keys_pressed[pygame.K_SPACE]:
                 jogador.pular()
+                som_pulo.play()
 
             if keys_pressed[pygame.K_s]:
                 jogador.agachar()
+                som_agachar.play()
+
             else:
                 jogador.levantar()
 
