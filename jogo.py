@@ -27,7 +27,7 @@ sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'sprite-sheet-t
 tuba_agachando = pygame.image.load(os.path.join(diretorio_imagens, 'sprite-sheet-tuba-agachado.png')).convert_alpha()
 
 # Criando os Coletaveis
-boloderolo = pygame.image.load(os.path.join(diretorio_imagens, 'boloderolo_animacao.png'))
+boloderolo = pygame.image.load(os.path.join(diretorio_imagens, 'coletaveis', 'boloderolo_animacao.png'))
 
 # Criando o cenário de fundo
 bg_image = pygame.image.load(os.path.join(diretorio_imagens, 'bg-cenario.png'))
@@ -42,15 +42,26 @@ def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
     tela.blit(img, (x, y))
 
+
 class Bolo(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.boloderolo_animacao = []
         for i in range(6):
-            img = boloderolo.subsurface((i*100, 0), (100, 100))
+            img = boloderolo.subsurface((i * 250, 0), (250, 250))
+            img = pygame.transform.scale(img, (250/3, 250/3))
             self.boloderolo_animacao.append(img)
 
+        self.index = 0
+        self.image = self.boloderolo_animacao[self.index]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (100, 100)
 
+    def update(self):
+        self.index += 0.1
+        if self.index >= len(self.boloderolo_animacao):
+            self.index = 0
+        self.image = self.boloderolo_animacao[int(self.index)]
 
 
 class Tuba(pygame.sprite.Sprite):
