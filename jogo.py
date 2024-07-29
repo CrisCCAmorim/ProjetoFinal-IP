@@ -4,6 +4,7 @@ from pygame.locals import *
 from sys import exit
 import os
 import math
+import random
 
 # localizando onde estão as spritsheets
 diretorio_principal = os.path.dirname(__file__)
@@ -26,8 +27,15 @@ sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'sprite-sheet-t
 # Criando a sprite do jogador abaixando
 tuba_agachando = pygame.image.load(os.path.join(diretorio_imagens, 'sprite-sheet-tuba-agachado.png')).convert_alpha()
 
-# Criando os Coletaveis
+# Criando os Coletaveis Positivos
 boloderolo = pygame.image.load(os.path.join(diretorio_imagens, 'coletaveis', 'boloderolo_animacao.png'))
+caldodecana = pygame.image.load(os.path.join(diretorio_imagens, 'coletaveis', 'caldodecana_animacao.png'))
+cuscuz = pygame.image.load(os.path.join(diretorio_imagens, 'coletaveis', 'cuscuz_animacao.png'))
+
+# Criando os Coletáveis Negativos
+cuscuz_paulista = pygame.image.load(os.path.join(diretorio_imagens, 'coletaveis', 'cuscuzpaulista_animacao.png'))
+pitu = pygame.image.load(os.path.join(diretorio_imagens, 'coletaveis', 'pitu_animacao.png'))
+rocambole = pygame.image.load(os.path.join(diretorio_imagens, 'coletaveis', 'rocambole_animacao.png'))
 
 # Criando o cenário de fundo
 bg_image = pygame.image.load(os.path.join(diretorio_imagens, 'bg-cenario.png'))
@@ -42,27 +50,27 @@ def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
     tela.blit(img, (x, y))
 
+# Classe de Coletáveis
+class Coletaveis(pygame.sprite.Sprite):
 
-class Bolo(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, imagem):
         pygame.sprite.Sprite.__init__(self)
-        self.boloderolo_animacao = []
+        self.lista = []
         for i in range(6):
-            img = boloderolo.subsurface((i * 250, 0), (250, 250))
-            img = pygame.transform.scale(img, (250/3, 250/3))
-            self.boloderolo_animacao.append(img)
+            img = imagem.subsurface((i * 333, 0), (333, 333))
+            img = pygame.transform.scale(img, (333 / 3, 333 / 3))
+            self.lista.append(img)
 
         self.index = 0
-        self.image = self.boloderolo_animacao[self.index]
+        self.image = self.lista[self.index]
         self.rect = self.image.get_rect()
-        self.rect.topleft = (100, 100)
-
+        self.rect.topleft = (600, 500)
 
     def update(self):
         self.index += 0.1
-        if self.index >= len(self.boloderolo_animacao):
+        if self.index >= len(self.lista):
             self.index = 0
-        self.image = self.boloderolo_animacao[int(self.index)]
+        self.image = self.lista[int(self.index)]
 
 
 class Tuba(pygame.sprite.Sprite):
@@ -133,7 +141,7 @@ def main():
     sprites_player = pygame.sprite.Group()
     jogador = Tuba()
     sprites_player.add(jogador)
-    bolo_de_rolo = Bolo()
+    bolo_de_rolo = Coletaveis(boloderolo)
     sprites_player.add(bolo_de_rolo)
 
     run = True
@@ -141,7 +149,7 @@ def main():
     scroll = 0
     tiles = math.ceil(largura_tela / bg_width) + 1
     n_ponte = 0
-    ponte_final = 5
+    ponte_final = 10
     vidas = 3
 
     while run: #loop principal
