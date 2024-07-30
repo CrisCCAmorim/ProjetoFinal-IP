@@ -14,19 +14,13 @@ diretorio_sons = os.path.join(diretorio_principal, 'sons')
 #iniciando pygame
 pygame.init()
 
-#sons
-som_agachar = pygame.mixer.Sound(os.path.join(diretorio_sons,'agachar.wav'))
-som_pulo = pygame.mixer.Sound(os.path.join(diretorio_sons,'pulo.wav'))
-som_buff = pygame.mixer.Sound(os.path.join(diretorio_sons,'coletar.wav'))
-som_debuff = pygame.mixer.Sound(os.path.join(diretorio_sons, 'coleta_ruim2.wav'))
-som_vitoria = pygame.mixer.Sound(os.path.join(diretorio_sons,'success-fanfare-trumpets-6185(1).wav'))
-#som_perder = pygame.mixer.Sound(os.path.join(diretorio_sons, ''))
-
 #musica de fundo 
-#musica_fundo = pygame.mixer.music.load(os.path.join(diretorio_sons, 'musica_fundo.mp3'))
-#pygame.mixer.music.play(-1)
-# Criando a tela e suas configurações
+musica_fundo = pygame.mixer.music.load(os.path.join(diretorio_sons, 'musica_fundo.mp3'))
+pygame.mixer.music.set_volume(0.25)
+pygame.mixer.music.play(-1)
+som_vitoria = pygame.mixer.Sound(os.path.join(diretorio_sons,'success-fanfare-trumpets-6185(1).wav'))
 
+#Criando a tela e suas configurações
 altura_tela = 692
 largura_tela = 1366
 dimensoes_tela = (largura_tela, altura_tela)
@@ -90,6 +84,15 @@ class Tuba(pygame.sprite.Sprite):
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+
+        #sons e seus determinados volumes
+        self.som_pulo = pygame.mixer.Sound(os.path.join(diretorio_sons,'pulo.wav'))
+        self.som_pulo.set_volume(0.45)
+        self.som_buff = pygame.mixer.Sound(os.path.join(diretorio_sons,'coletar.wav'))
+        self.som_debuff = pygame.mixer.Sound(os.path.join(diretorio_sons, 'coleta_ruim2.wav'))
+        self.som_agachar = pygame.mixer.Sound(os.path.join(diretorio_sons,'agachar.wav'))
+        self.som_agachar.set_volume(1)
+
         self.tuba_agachando = []
         for i in range(3):
             img1 = tuba_agachando.subsurface((i * 300, 0), (300, 300))
@@ -118,6 +121,8 @@ class Tuba(pygame.sprite.Sprite):
     # metodo para quando ele está aguachado
     def agachar(self):
         self.esta_agachado = True
+        self.som_agachar.stop()
+        self.som_agachar.play()
 
     # metodo de quando ele levanta
     def levantar(self):
@@ -125,6 +130,8 @@ class Tuba(pygame.sprite.Sprite):
 
     def pular(self):
         self.pulo = True
+        self.som_pulo.stop()
+        self.som_pulo.play()
 
     def update(self):
         if self.pulo:
@@ -163,6 +170,7 @@ def main():
     n_ponte = 0
     ponte_final = 10
     vidas = 3
+    som_vitoria_tocado = False
 
     while run: #loop principal
         relogio.tick(30)
@@ -195,11 +203,11 @@ def main():
             keys_pressed = pygame.key.get_pressed()
             if keys_pressed[pygame.K_SPACE]:
                 jogador.pular()
-                som_pulo.play()
+                #som_pulo.play()
 
             if keys_pressed[pygame.K_s]:
                 jogador.agachar()
-                som_agachar.play()
+        
 
             else:
                 jogador.levantar()
@@ -218,6 +226,10 @@ def main():
         elif n_ponte > ponte_final:
             win_img = pygame.image.load(os.path.join(diretorio_imagens, 'venceu.png'))
             tela.blit(win_img, (0, 0))
+            pygame.mixer.music.stop()
+            if not som_vitoria_tocado:
+                som_vitoria.play()
+                som_vitoria_tocado = True
 
         pygame.display.flip()
 
