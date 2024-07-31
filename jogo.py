@@ -203,7 +203,7 @@ def main():
     som_vitoria_tocado = False
     tempo_ultimo_coletavel = 0
     points = 0
-    fonte = pygame.font.Font('freesansbold.ttf', 20)
+    fonte = pygame.font.Font('freesansbold.ttf', 21)
 
     def score(tela, points): #Score na tela
         points += 1    
