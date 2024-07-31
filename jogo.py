@@ -163,8 +163,8 @@ class Tuba(pygame.sprite.Sprite):
 
     def update(self, delta_time):
         if self.pulo:
-            self.rect.y -= self.veloc_pulo * 4
-            self.veloc_pulo -= 0.8
+            self.rect.y -= self.veloc_pulo * 4 
+            self.veloc_pulo -= 0.5
         if self.veloc_pulo < -self.VELOC_PULO:
             self.pulo = False
             self.veloc_pulo = self.VELOC_PULO
@@ -202,6 +202,13 @@ def main():
     vidas = 3
     som_vitoria_tocado = False
     tempo_ultimo_coletavel = 0
+    points = 0
+    fonte = pygame.font.Font('freesansbold.ttf', 20)
+
+    def score(tela, points): #Score na tela
+        points += 1    
+        text_score = fonte.render('Score: ' + str(points), True, (0, 0, 0))
+        tela.blit(text_score, (15, 10))
 
     while run: #loop principal
         delta_time = relogio.tick(30) / 1000.0 #tempo decorrido em segundos
@@ -218,6 +225,10 @@ def main():
 
         # Scroll background
         scroll -= 10
+
+        #Score na tela
+        score(tela, points)
+        points += 1
 
         # Reset scroll
         if abs(scroll) > bg_width:
