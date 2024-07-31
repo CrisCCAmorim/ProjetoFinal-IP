@@ -78,6 +78,25 @@ class Coletaveis(pygame.sprite.Sprite):
             self.index = 0
         self.image = self.lista[int(self.index)]
 
+# Variáveis para controlar a adição de coletáveis
+tempo_para_adicionar_coletaveis = 5  # Tempo em segundos para adicionar um novo coletável
+tempo_ultimo_coletavel = 0  # Tempo do último coletável adicionado
+
+# Lista para armazenar coletáveis ativos
+coletaveis_ativos = pygame.sprite.Group()
+
+def adicionar_coletavel():
+
+    if len(coletaveis_ativos) > 2:
+        return
+
+    imagens_coletaveis = [boloderolo, caldodecana, cuscuz, cuscuz_paulista, pitu, rocambole]
+    imagem = random.choice(imagens_coletaveis)
+    novo_coletavel = Coletaveis(imagem)
+    nova_posicao_x = random.randint(largura_tela, largura_tela + 200)  # Fora da tela à direita
+    nova_posicao_y = random.randint(250, 500)  # Dentro dos limites da tela
+    novo_coletavel.rect.topleft = (nova_posicao_x, nova_posicao_y)
+    coletaveis_ativos.add(novo_coletavel)
 
 class Tuba(pygame.sprite.Sprite):
     VELOC_PULO = 8.5
@@ -160,8 +179,8 @@ def main():
     sprites_player = pygame.sprite.Group()
     jogador = Tuba()
     sprites_player.add(jogador)
-    bolo_de_rolo = Coletaveis(boloderolo)
-    sprites_player.add(bolo_de_rolo)
+    coletaveis_ativos.add(Coletaveis(pitu))
+    global tempo_ultimo_coletavel
 
     run = True
     relogio = pygame.time.Clock()
@@ -171,9 +190,10 @@ def main():
     ponte_final = 10
     vidas = 3
     som_vitoria_tocado = False
+    tempo_ultimo_coletavel = 0
 
     while run: #loop principal
-        relogio.tick(30)
+        delta_time = relogio.tick(30) / 1000.0 #tempo decorrido em segundos
 
         for event in pygame.event.get():  # Para fechar a janela do jogo
             if event.type == QUIT:
@@ -197,7 +217,9 @@ def main():
         if n_ponte <= ponte_final:
             # Desenhando o personagem na tela e atualizando a animação
             sprites_player.draw(tela)
-            sprites_player.update()
+            sprites_player.update(delta_time)
+            coletaveis_ativos.update(delta_time)
+            coletaveis_ativos.draw(tela)
 
             # Configurando o pulo
             keys_pressed = pygame.key.get_pressed()
@@ -207,10 +229,15 @@ def main():
 
             if keys_pressed[pygame.K_s]:
                 jogador.agachar()
-        
 
             else:
                 jogador.levantar()
+
+            #adiciona um novo coletavel quando necessário
+            tempo_ultimo_coletavel += delta_time
+            if tempo_ultimo_coletavel >= tempo_para_adicionar_coletaveis:
+                tempo_ultimo_coletavel = 0
+                adicionar_coletavel()
 
             # Desenhando a UI
             draw_text(str(vidas), text_font, text_color, 1120, 20)
