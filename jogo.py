@@ -56,28 +56,6 @@ def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
     tela.blit(img, (x, y))
 
-# Classe de Coletáveis
-class Coletaveis(pygame.sprite.Sprite):
-
-    def __init__(self, imagem):
-        pygame.sprite.Sprite.__init__(self)
-        self.lista = []
-        for i in range(6):
-            img = imagem.subsurface((i * 333, 0), (333, 333))
-            img = pygame.transform.scale(img, (333 / 3, 333 / 3))
-            self.lista.append(img)
-
-        self.index = 0
-        self.image = self.lista[self.index]
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (600, 500)
-
-    def update(self):
-        self.index += 0.1
-        if self.index >= len(self.lista):
-            self.index = 0
-        self.image = self.lista[int(self.index)]
-
 # Variáveis para controlar a adição de coletáveis
 tempo_para_adicionar_coletaveis = 5  # Tempo em segundos para adicionar um novo coletável
 tempo_ultimo_coletavel = 0  # Tempo do último coletável adicionado
@@ -97,6 +75,37 @@ def adicionar_coletavel():
     nova_posicao_y = random.randint(250, 500)  # Dentro dos limites da tela
     novo_coletavel.rect.topleft = (nova_posicao_x, nova_posicao_y)
     coletaveis_ativos.add(novo_coletavel)
+# Classe de Coletáveis
+class Coletaveis(pygame.sprite.Sprite):
+
+    def __init__(self, imagem):
+        pygame.sprite.Sprite.__init__(self)
+        self.lista = []
+        self.index = 0 
+        self.taxa_quadros = 0.2
+        self.time = 0
+
+        for i in range(6):
+            img = imagem.subsurface((i * 100, 0), (100, 100))
+            img = pygame.transform.scale(img, (100 * 1, 100 * 1))
+            self.lista.append(img)
+
+        self.image = self.lista[self.index]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (600, 450)
+
+    def update(self, delta_time):
+        self.time += delta_time
+        if self.time >= self.taxa_quadros:
+            self.time = 0
+            self.index += 1
+            if self.index >= len(self.lista):
+                self.index = 0
+            self.image = self.lista[int(self.index)]
+        if self.rect.topright[0] < 0:
+            self.rect.x = largura_tela
+        self.rect.x -= 10
+
 
 class Tuba(pygame.sprite.Sprite):
     VELOC_PULO = 8.5
@@ -152,7 +161,7 @@ class Tuba(pygame.sprite.Sprite):
         self.som_pulo.stop()
         self.som_pulo.play()
 
-    def update(self):
+    def update(self, delta_time):
         if self.pulo:
             self.rect.y -= self.veloc_pulo * 4
             self.veloc_pulo -= 0.8
@@ -175,12 +184,14 @@ class Tuba(pygame.sprite.Sprite):
 
 
 def main():
+    global tempo_ultimo_coletavel
+
     # Looping do jogo
     sprites_player = pygame.sprite.Group()
     jogador = Tuba()
     sprites_player.add(jogador)
     coletaveis_ativos.add(Coletaveis(pitu))
-    global tempo_ultimo_coletavel
+    
 
     run = True
     relogio = pygame.time.Clock()
@@ -216,8 +227,8 @@ def main():
 
         if n_ponte <= ponte_final:
             # Desenhando o personagem na tela e atualizando a animação
-            sprites_player.draw(tela)
             sprites_player.update(delta_time)
+            sprites_player.draw(tela)
             coletaveis_ativos.update(delta_time)
             coletaveis_ativos.draw(tela)
 
