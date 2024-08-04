@@ -106,7 +106,7 @@ class Coletaveis(pygame.sprite.Sprite):
             self.rect.x = largura_tela
         self.rect.x -= 10
 
-
+# Classe do jogador
 class Tuba(pygame.sprite.Sprite):
     VELOC_PULO = 8.5
 
@@ -146,7 +146,7 @@ class Tuba(pygame.sprite.Sprite):
 
         self.esta_agachado = False
     
-    # metodo para quando ele está aguachado
+    # metodo para quando ele está agachado
     def agachar(self):
         self.esta_agachado = True
         self.som_agachar.stop()
@@ -192,8 +192,9 @@ def main():
     sprites_player.add(jogador)
     coletaveis_ativos.add(Coletaveis(pitu))
     
-
+    # Inicialização das variáveis
     run = True
+    game_over = False
     relogio = pygame.time.Clock()
     scroll = 0
     tiles = math.ceil(largura_tela / bg_width) + 1
@@ -270,6 +271,11 @@ def main():
             if n_ponte == ponte_final:
                 linha_chegada = pygame.image.load(os.path.join(diretorio_imagens, 'linha-chegada.png')).convert_alpha()
                 tela.blit(linha_chegada, (largura_tela + scroll, 500))
+
+            # Cutscene em caso de Game Over
+            if game_over == True:
+                game_over_img = pygame.image.load(os.path.join(diretorio_imagens, 'game-over.png'))
+                tela.blit(game_over_img, (0, 0))
 
         # Cutscene final
         elif n_ponte > ponte_final:
