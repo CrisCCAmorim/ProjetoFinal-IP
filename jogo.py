@@ -48,9 +48,8 @@ bg_image = pygame.image.load(os.path.join(diretorio_imagens, 'bg-cenario.png'))
 bg_width = bg_image.get_width()
 
 # Função para mostrar a quantidade de vidas na tela e definir a fonte e a cor do texto
-text_font = pygame.font.SysFont("Comic Sans MS", 40)
-text_color = (202, 18, 4)
-
+text_font = pygame.font.SysFont('freesansbold.ttf', 40)
+text_color_life = (202, 18, 4)
 
 def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
@@ -63,6 +62,7 @@ tempo_ultimo_coletavel = 0  # Tempo do último coletável adicionado
 # Lista para armazenar coletáveis ativos
 coletaveis_ativos = pygame.sprite.Group()
 
+# Função para gerar coletáveis aleatóriamente
 def adicionar_coletavel():
 
     if len(coletaveis_ativos) > 2:
@@ -75,6 +75,7 @@ def adicionar_coletavel():
     nova_posicao_y = random.randint(250, 500)  # Dentro dos limites da tela
     novo_coletavel.rect.topleft = (nova_posicao_x, nova_posicao_y)
     coletaveis_ativos.add(novo_coletavel)
+
 # Classe de Coletáveis
 class Coletaveis(pygame.sprite.Sprite):
 
@@ -205,6 +206,9 @@ def main():
     tempo_ultimo_coletavel = 0
     points = 0
     fonte = pygame.font.Font('freesansbold.ttf', 21)
+    qtd_cuscuz = 0
+    qtd_pitu = 0
+    qtd_cuscuzpaulista = 0
 
     def score(tela, points): #Score na tela
         points += 1    
@@ -227,15 +231,12 @@ def main():
         # Scroll background
         scroll -= 10
 
-        #Score na tela
-        score(tela, points)
-        points += 1
-
         # Reset scroll
         if abs(scroll) > bg_width:
             scroll = 0
-            n_ponte += 1  # Contando quantas pontes se passaram
-            print(n_ponte)
+            if game_over == False:
+                n_ponte += 1  # Contando quantas pontes se passaram
+                print(n_ponte)
 
         if n_ponte <= ponte_final:
             # Desenhando o personagem na tela e atualizando a animação
@@ -263,9 +264,24 @@ def main():
                 adicionar_coletavel()
 
             # Desenhando a UI
-            draw_text(str(vidas), text_font, text_color, 1120, 20)
+            score(tela, points)            # score
+            points += 1
+
+            draw_text(str(vidas), text_font, text_color_life, 1120, 40)      # quantidade de vidas
             coracao_vidas = pygame.image.load(os.path.join(diretorio_imagens, 'coracao-vidas.png')).convert_alpha()
             tela.blit(coracao_vidas, (largura_tela - 195 * 1.2, 0))
+
+            draw_text(str(qtd_cuscuz), text_font, (0,0,0), 250, 20)     # quantidade de cuscuz coletado
+            cuscuz_UI = cuscuz.subsurface((100, 0), (100, 100))
+            tela.blit(cuscuz_UI, (150, 0))
+
+            draw_text(str(qtd_pitu), text_font, (0,0,0), 400, 20)     # quantidade de pitu coletada
+            pitu_UI = pitu.subsurface((100, 0), (100, 100))
+            tela.blit(pitu_UI, (300, 0))
+
+            draw_text(str(qtd_cuscuzpaulista), text_font, (0,0,0), 550, 20)     # quantidade de cuscuz paulista coletado
+            cuscuzpaulista_UI = cuscuz_paulista.subsurface((100, 0), (100, 100))
+            tela.blit(cuscuzpaulista_UI, (450, 0))
 
             # Posicionando a linha de chegada
             if n_ponte == ponte_final:
