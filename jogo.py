@@ -93,6 +93,7 @@ class Coletaveis(pygame.sprite.Sprite):
 
         self.image = self.lista[self.index]
         self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect.topleft = (600, 450)
 
     def update(self, delta_time):
@@ -141,6 +142,7 @@ class Tuba(pygame.sprite.Sprite):
         self.index_lista = 0
         self.image = self.imagens_tuba[self.index_lista]
         self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect.center = (500, 500)
         self.pulo = False
         self.posicao_y_inicial = 350
@@ -262,6 +264,10 @@ def main():
             if tempo_ultimo_coletavel >= tempo_para_adicionar_coletaveis:
                 tempo_ultimo_coletavel = 0
                 adicionar_coletavel()
+
+            # Checando se houve colisões
+            colisoes = pygame.sprite.spritecollide(jogador, coletaveis_ativos, True, pygame.sprite.collide_mask)
+            print(colisoes)
 
             # Desenhando a UI
             score(tela, points)            # score
