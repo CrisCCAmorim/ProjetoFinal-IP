@@ -244,7 +244,11 @@ def main():
     tempo_ativo = 0
 
     def score(tela, points): #Score na tela
-        points += 1    
+        if debuff_ativo:
+            points += 0
+        if buff_ativo:
+            points += 2
+        points += 1
         text_score = fonte.render('Score: ' + str(points), True, (0, 0, 0))
         tela.blit(text_score, (15, 10))
 
@@ -263,6 +267,7 @@ def main():
 
         # Scroll background
         if buff_ativo:
+            debuff_ativo = False
             scroll -= 20
             tempo_ativo += 1
             if tempo_ativo >= 100:
@@ -272,6 +277,7 @@ def main():
             scroll -= 10
 
         if debuff_ativo:
+            buff_ativo = False
             scroll -= 1
             tempo_ativo += 1
             if tempo_ativo >= 100:
@@ -360,7 +366,7 @@ def main():
                 game_over=True
             
 
-        # Cutscene final
+        # Cutscene vitória
         elif n_ponte > ponte_final:
             win_img = pygame.image.load(os.path.join(diretorio_imagens, 'venceu.png'))
             tela.blit(win_img, (0, 0))
