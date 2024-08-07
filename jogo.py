@@ -219,7 +219,7 @@ def main():
     scroll = 0
     tiles = math.ceil(largura_tela / bg_width) + 1
     n_ponte = 0
-    ponte_final = 30
+    ponte_final = 35
     vidas = 3
     som_vitoria_tocado = False
     tempo_ultimo_coletavel = 0
