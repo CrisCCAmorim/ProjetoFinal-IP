@@ -219,7 +219,7 @@ def main():
     scroll = 0
     tiles = math.ceil(largura_tela / bg_width) + 1
     n_ponte = 0
-    ponte_final = 20
+    ponte_final = 35
     vidas = 3
     som_vitoria_tocado = False
     tempo_ultimo_coletavel = 0
@@ -256,6 +256,7 @@ def main():
 
         # Scroll background
         if buff_ativo:
+            debuff_ativo = False
             scroll -= 20
             tempo_ativo += 1
             if tempo_ativo >= 100:
@@ -265,6 +266,7 @@ def main():
             scroll -= 10
 
         if debuff_ativo:
+            buff_ativo = False
             scroll -= 1
             tempo_ativo += 1
             if tempo_ativo >= 100:
@@ -354,7 +356,7 @@ def main():
                 game_over_img = pygame.image.load(os.path.join(diretorio_imagens, 'game-over.png'))
                 tela.blit(game_over_img, (0, 0))
 
-        # Cutscene final
+        # Cutscene vitória
         elif n_ponte > ponte_final:
             win_img = pygame.image.load(os.path.join(diretorio_imagens, 'venceu.png'))
             tela.blit(win_img, (0, 0))
