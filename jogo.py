@@ -125,7 +125,7 @@ def adicionar_coletavel():
     novo_coletavel = Coletaveis(imagem, tipo)
     
     # Definindo uma faixa de altura acessível para os coletáveis
-    altura_minima = 249  # Ajuste conforme a altura mínima que o jogador pode alcançar
+    altura_minima = 249,5  # Ajuste conforme a altura mínima que o jogador pode alcançar
     altura_maxima = 500  # Ajuste conforme a altura máxima que o jogador pode alcançar
     
     nova_posicao_x = random.randint(largura_tela, largura_tela + 200)  # Fora da tela à direita
