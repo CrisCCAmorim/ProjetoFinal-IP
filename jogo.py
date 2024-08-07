@@ -337,7 +337,6 @@ def main():
             for colisao in colisoes:
                 if colisao.tipo == "cuscuz":
                     qtd_cuscuz += 1
-                    vidas += 1
                     jogador.som_buff.play()
                     buff_ativo = True
                     print(f"Cuscuz coletado: {qtd_cuscuz}")
