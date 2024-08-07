@@ -1,15 +1,15 @@
 # Recin Run
-Jogo 2D, sidescroller, de corrida, feito como projeto final da disciplina de Introdução à programação no período de 2024.1. A proposta do jogo é simular uma corrida nas ruas do Recife, em que o personagem principal, Tuba, deve coletar itens que vão o deixar mais veloz e desviar de itens que vão o atrasar.
+Jogo 2D, sidescroller, de corrida, feito como projeto final da disciplina de Introdução à programação no período de 2024.1. A proposta do jogo é simular uma corrida nas ruas do Recife, em que o personagem principal, Tuba, deve coletar itens que vão o deixar mais veloz e desviar de itens que vão ou o atrasar, ou fazê-lo perder vidas.
 
 Item benéfico: 
-- Cuscuz.
+- Cuscuz: Aumenta sua velocidade durante 5 segundos.
 ![Cuscuz](https://github.com/CrisCCAmorim/ProjetoFinal-IP/blob/main/imagens/coletaveis/cuscuz_animacao.png?raw=true)
 
 Itens maléficos: 
-- Cuscuz Paulista
+- Cuscuz Paulista: Faz você perder vida.
 ![Cuscuz Paulista](https://github.com/CrisCCAmorim/ProjetoFinal-IP/blob/main/imagens/coletaveis/cuscuzpaulista_animacao.png?raw=true)
 
-- Pitu
+- Pitu: Diminui sua velocidade durante 5 segundos.
 ![Pitu](https://github.com/CrisCCAmorim/ProjetoFinal-IP/blob/main/imagens/coletaveis/pitu_animacao.png?raw=true)
 
 # Integrantes da equipe
