@@ -293,6 +293,7 @@ def main():
                     print(f"Pitu coletado: {qtd_pitu}")
                 elif colisao.tipo == "cuscuz_paulista":
                     qtd_cuscuzpaulista += 1
+                    vidas -= 1
                     jogador.som_debuff.play()
                     print(f"Cuscuz Paulista coletado: {qtd_cuscuzpaulista}")
 
@@ -322,6 +323,8 @@ def main():
                 tela.blit(linha_chegada, (largura_tela + scroll, 500))
 
             # Cutscene em caso de Game Over
+            if vidas <= 0:
+                game_over=True
             if game_over:
                 game_over_img = pygame.image.load(os.path.join(diretorio_imagens, 'game-over.png'))
                 tela.blit(game_over_img, (0, 0))
