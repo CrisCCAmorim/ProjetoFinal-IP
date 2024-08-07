@@ -233,7 +233,11 @@ def main():
     tempo_ativo = 0
 
     def score(tela, points): #Score na tela
-        points += 1    
+        if debuff_ativo:
+            points += 0
+        if buff_ativo:
+            points += 2
+        points += 1
         text_score = fonte.render('Score: ' + str(points), True, (0, 0, 0))
         tela.blit(text_score, (15, 10))
 
