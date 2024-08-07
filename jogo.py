@@ -228,6 +228,9 @@ def main():
     qtd_cuscuz = 0
     qtd_pitu = 0
     qtd_cuscuzpaulista = 0
+    buff_ativo = False
+    debuff_ativo = False
+    tempo_ativo = 0
 
     def score(tela, points): #Score na tela
         points += 1    
@@ -248,14 +251,30 @@ def main():
             tela.blit(bg_image, (i * bg_width + scroll, 0))
 
         # Scroll background
-        scroll -= 10
+        if buff_ativo:
+            scroll -= 20
+            tempo_ativo += 1
+            if tempo_ativo >= 100:
+                buff_ativo = False
+                tempo_ativo = 0
+        else:
+            scroll -= 10
+
+        if debuff_ativo:
+            scroll -= 1
+            tempo_ativo += 1
+            if tempo_ativo >= 100:
+                debuff_ativo = False
+                tempo_ativo = 0
+        else:
+            scroll -= 10
 
         # Reset scroll
         if abs(scroll) > bg_width:
             scroll = 0
             if not game_over:
                 n_ponte += 1  # Contando quantas pontes se passaram
-                print(n_ponte)
+                print(f'Numero da ponte: {n_ponte}')
 
         if n_ponte <= ponte_final:
             # Desenhando o personagem na tela e atualizando a animação
@@ -286,10 +305,12 @@ def main():
                 if colisao.tipo == "cuscuz":
                     qtd_cuscuz += 1
                     jogador.som_buff.play()
+                    buff_ativo = True
                     print(f"Cuscuz coletado: {qtd_cuscuz}")
                 elif colisao.tipo == "pitu":
                     qtd_pitu += 1
                     jogador.som_debuff.play()
+                    debuff_ativo = True
                     print(f"Pitu coletado: {qtd_pitu}")
                 elif colisao.tipo == "cuscuz_paulista":
                     qtd_cuscuzpaulista += 1
