@@ -255,7 +255,7 @@ def main():
     points = 0
     scroll = 0
     n_ponte = 0
-    ponte_final = 50
+    ponte_final = 120
     tempo_ultimo_coletavel = 0
     tempo_ativo = 0
     
