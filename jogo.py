@@ -194,6 +194,9 @@ class Tuba(pygame.sprite.Sprite):
         self.esta_agachado = True
         self.som_agachar.stop()
         self.som_agachar.play()
+        if self.rect.y < self.posicao_y_inicial: #conseguir abaixar rápido se tiver pulando
+            self.rect.y -= self.veloc_pulo * 2
+            self.veloc_pulo -= 0.5
 
     # metodo de quando ele levanta
     def levantar(self):
@@ -241,23 +244,25 @@ def main():
     # Inicialização das variáveis
     run = True
     game_over = False
-    relogio = pygame.time.Clock()
-    scroll = 0
-    tiles = math.ceil(largura_tela / bg_width) + 1
-    n_ponte = 0
-    ponte_final = 120
-    vidas = 3
     som_vitoria_tocado = False
     som_derrota_tocado = False
-    tempo_ultimo_coletavel = 0
-    points = 0
+    buff_ativo = False
+    debuff_ativo = False
+    relogio = pygame.time.Clock()
+    tiles = math.ceil(largura_tela / bg_width) + 1
     fonte = pygame.font.Font('freesansbold.ttf', 21)
+    vidas = 3
+    points = 0
+    scroll = 0
+    n_ponte = 0
+    ponte_final = 50
+    tempo_ultimo_coletavel = 0
+    tempo_ativo = 0
+    
+    # Contagem dos coletáveis
     qtd_cuscuz = 0
     qtd_pitu = 0
     qtd_cuscuzpaulista = 0
-    buff_ativo = False
-    debuff_ativo = False
-    tempo_ativo = 0
 
     def score(tela, points): #Score na tela
         if debuff_ativo:
@@ -282,19 +287,19 @@ def main():
             tela.blit(bg_image, (i * bg_width + scroll, 0))
 
         # Scroll background
-        if buff_ativo:
+        if buff_ativo: 
             debuff_ativo = False
-            scroll -= 20
+            scroll -= 20 # Background mais rápido
             tempo_ativo += 1
             if tempo_ativo >= 100:
                 buff_ativo = False
                 tempo_ativo = 0
         else:
-            scroll -= 10
+            scroll -= 10 
 
-        if debuff_ativo:
+        if debuff_ativo: 
             buff_ativo = False
-            scroll -= 1
+            scroll -= 1 # Background mais lento
             tempo_ativo += 1
             if tempo_ativo >= 100:
                 debuff_ativo = False
@@ -337,7 +342,6 @@ def main():
             for colisao in colisoes:
                 if colisao.tipo == "cuscuz":
                     qtd_cuscuz += 1
-                    vidas += 1
                     jogador.som_buff.play()
                     buff_ativo = True
                     print(f"Cuscuz coletado: {qtd_cuscuz}")
@@ -356,19 +360,21 @@ def main():
             score(tela, points)  # score
             points += 1
 
-            draw_text(str(vidas), text_font, text_color_life, 1120, 40)  # quantidade de vidas
+            #Mostrando a quantidade de corações na tela
+            draw_text(str(vidas), text_font, text_color_life, 1120, 40) 
             coracao_vidas = pygame.image.load(os.path.join(diretorio_imagens, 'coracao-vidas.png')).convert_alpha()
             tela.blit(coracao_vidas, (largura_tela - 195 * 1.2, 0))
 
-            draw_text(str(qtd_cuscuz), text_font, (0, 0, 0), 250, 20)  # quantidade de cuscuz coletado
+            #Quantidade de coleáveis na tela
+            draw_text(str(qtd_cuscuz), text_font, (0, 0, 0), 250, 20)  # quantidade de cuscuz 
             cuscuz_UI = cuscuz.subsurface((100, 0), (100, 100))
             tela.blit(cuscuz_UI, (150, 0))
 
-            draw_text(str(qtd_pitu), text_font, (0, 0, 0), 400, 20)  # quantidade de pitu coletada
+            draw_text(str(qtd_pitu), text_font, (0, 0, 0), 400, 20)  # quantidade de pitu 
             pitu_UI = pitu.subsurface((100, 0), (100, 100))
             tela.blit(pitu_UI, (300, 0))
 
-            draw_text(str(qtd_cuscuzpaulista), text_font, (0, 0, 0), 550, 20)  # quantidade de cuscuz paulista coletado
+            draw_text(str(qtd_cuscuzpaulista), text_font, (0, 0, 0), 550, 20)  # quantidade de cuscuz paulista 
             cuscuzpaulista_UI = cuscuz_paulista.subsurface((100, 0), (100, 100))
             tela.blit(cuscuzpaulista_UI, (450, 0))
 
@@ -377,7 +383,7 @@ def main():
                 linha_chegada = pygame.image.load(os.path.join(diretorio_imagens, 'linha-chegada.png')).convert_alpha()
                 tela.blit(linha_chegada, (largura_tela + scroll, 500))
 
-            # Cutscene em caso de Game Over
+            # Game Over
             if vidas <= 0:
                 game_over=True
             
@@ -391,6 +397,7 @@ def main():
                 som_vitoria.play()
                 som_vitoria_tocado = True
 
+        # Cutscene em caso de Game Over
         if game_over:
             game_over_img = pygame.image.load(os.path.join(diretorio_imagens, 'game-over.png'))
             tela.blit(game_over_img, (0, 0))
