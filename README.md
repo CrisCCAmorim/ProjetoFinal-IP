@@ -44,3 +44,6 @@ Lógica das colisões e alteração do placar.
 # Desafios e aprendizados
 Como desafios, podemos destacar a gestão de tempo, tendo em vista o tempo limitado e a atenção que outras disciplinas exigiram paralelamente; a coordenação e divisão de tarefas, visto que todas não estavam habituadas com as mesmas ferramentas de gestão de projetos; a manutenção de um código limpo e organizado, o que foi solucionado com uma quantidade satisfatória de comentários; a utilização do GitHub de maneira colaborativa.
 Como aprendizados, observamos uma boa redistribuição de tarefas, quando necessário; a exploração da biblioteca pygame e da POO;
+
+# Imagem Do Jogo
+![Jogo](https://github.com/CrisCCAmorim/ProjetoFinal-IP/blob/main/imagens/ccb300f2-398f-4778-9145-d62b5d8cf3c3.jpg)
