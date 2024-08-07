@@ -35,14 +35,11 @@ sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'sprite-sheet-t
 tuba_agachando = pygame.image.load(os.path.join(diretorio_imagens, 'sprite-sheet-tuba-agachado.png')).convert_alpha()
 
 # Criando os Coletaveis Positivos
-boloderolo = pygame.image.load(os.path.join(diretorio_imagens, 'coletaveis', 'boloderolo_animacao.png'))
-caldodecana = pygame.image.load(os.path.join(diretorio_imagens, 'coletaveis', 'caldodecana_animacao.png'))
 cuscuz = pygame.image.load(os.path.join(diretorio_imagens, 'coletaveis', 'cuscuz_animacao.png'))
 
 # Criando os Coletáveis Negativos
 cuscuz_paulista = pygame.image.load(os.path.join(diretorio_imagens, 'coletaveis', 'cuscuzpaulista_animacao.png'))
 pitu = pygame.image.load(os.path.join(diretorio_imagens, 'coletaveis', 'pitu_animacao.png'))
-rocambole = pygame.image.load(os.path.join(diretorio_imagens, 'coletaveis', 'rocambole_animacao.png'))
 
 # Criando o cenário de fundo
 bg_image = pygame.image.load(os.path.join(diretorio_imagens, 'bg-cenario.png'))
@@ -63,22 +60,35 @@ tempo_ultimo_coletavel = 0  # Tempo do último coletável adicionado
 # Lista para armazenar coletáveis ativos
 coletaveis_ativos = pygame.sprite.Group()
 
+contadores_coletaveis = {"cuscuz": 0, "cuscuz_paulista": 0, "pitu": 0}
+min_aparicoes = 2
+
 # Função para gerar coletáveis aleatóriamente
 def adicionar_coletavel():
-
     if len(coletaveis_ativos) > 2:
         return
 
     imagens_coletaveis = [cuscuz, cuscuz_paulista, pitu]
     tipos_coletaveis = ["cuscuz", "cuscuz_paulista", "pitu"]
-    index = random.randint(0, len(imagens_coletaveis) - 1)
-    imagem = imagens_coletaveis[index]
-    tipo = tipos_coletaveis[index]
+
+    # Filtrando os tipos que ainda não atingiram o mínimo de aparições
+    tipos_disponiveis = [tipo for tipo in tipos_coletaveis if contadores_coletaveis[tipo] < min_aparicoes]
+    if not tipos_disponiveis:
+        # Se todos os tipos já atingiram o mínimo, permitimos todos
+        tipos_disponiveis = tipos_coletaveis
+
+
+    index = random.randint(0, len(tipos_disponiveis) - 1)
+    tipo = tipos_disponiveis[index]
+    imagem = imagens_coletaveis[tipos_coletaveis.index(tipo)]
     novo_coletavel = Coletaveis(imagem, tipo)
     nova_posicao_x = random.randint(largura_tela, largura_tela + 200)  # Fora da tela à direita
     nova_posicao_y = random.randint(250, 500)  # Dentro dos limites da tela
     novo_coletavel.rect.topleft = (nova_posicao_x, nova_posicao_y)
     coletaveis_ativos.add(novo_coletavel)
+
+    # Incrementa o contador do tipo de coletável adicionado
+    contadores_coletaveis[tipo] += 1
 
 # Classe de Coletáveis
 class Coletaveis(pygame.sprite.Sprite):
@@ -124,7 +134,9 @@ class Tuba(pygame.sprite.Sprite):
         self.som_pulo = pygame.mixer.Sound(os.path.join(diretorio_sons,'pulo.wav'))
         self.som_pulo.set_volume(0.45)
         self.som_buff = pygame.mixer.Sound(os.path.join(diretorio_sons,'coletar.wav'))
+        self.som_buff.set_volume(0.28)
         self.som_debuff = pygame.mixer.Sound(os.path.join(diretorio_sons, 'coleta_ruim2.wav'))
+        self.som_debuff.set_volume(0.28)
         self.som_agachar = pygame.mixer.Sound(os.path.join(diretorio_sons,'agachar.wav'))
         self.som_agachar.set_volume(1)
 
@@ -207,7 +219,7 @@ def main():
     scroll = 0
     tiles = math.ceil(largura_tela / bg_width) + 1
     n_ponte = 0
-    ponte_final = 10
+    ponte_final = 20
     vidas = 3
     som_vitoria_tocado = False
     tempo_ultimo_coletavel = 0
