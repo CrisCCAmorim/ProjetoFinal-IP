@@ -17,9 +17,11 @@ pygame.init()
 #musica de fundo 
 musica_fundo = pygame.mixer.music.load(os.path.join(diretorio_sons, 'musica_fundo.mp3'))
 pygame.mixer.music.set_volume(0.25)
-#pygame.mixer.music.play(-1)
+pygame.mixer.music.play(-1)
 som_vitoria = pygame.mixer.Sound(os.path.join(diretorio_sons,'success-fanfare-trumpets-6185(1).wav'))
+som_vitoria.set_volume(0.50)
 som_derrota  = pygame.mixer.Sound(os.path.join(diretorio_sons, 'game over - sound effect.mp3'))
+som_derrota.set_volume(0.50)
 
 #Criando a tela e suas configurações
 altura_tela = 692
@@ -63,40 +65,11 @@ coletaveis_ativos = pygame.sprite.Group()
 contadores_coletaveis = {"cuscuz": 0, "cuscuz_paulista": 0, "pitu": 0}
 min_aparicoes = 2
 
-# Função para gerar coletáveis aleatóriamente
-def adicionar_coletavel():
-    if len(coletaveis_ativos) > 2:
-        return
-
-    imagens_coletaveis = [cuscuz, cuscuz_paulista, pitu]
-    tipos_coletaveis = ["cuscuz", "cuscuz_paulista", "pitu"]
-
-    # Filtrando os tipos que ainda não atingiram o mínimo de aparições
-    tipos_disponiveis = [tipo for tipo in tipos_coletaveis if contadores_coletaveis[tipo] < min_aparicoes]
-    if not tipos_disponiveis:
-        # Se todos os tipos já atingiram o mínimo, permitimos todos
-        tipos_disponiveis = tipos_coletaveis
-
-
-    index = random.randint(0, len(tipos_disponiveis) - 1)
-    tipo = tipos_disponiveis[index]
-    imagem = imagens_coletaveis[tipos_coletaveis.index(tipo)]
-    novo_coletavel = Coletaveis(imagem, tipo)
-    nova_posicao_x = random.randint(largura_tela, largura_tela + 200)  # Fora da tela à direita
-    nova_posicao_y = random.randint(250, 500)  # Dentro dos limites da tela
-    novo_coletavel.rect.topleft = (nova_posicao_x, nova_posicao_y)
-    coletaveis_ativos.add(novo_coletavel)
-
-    # Incrementa o contador do tipo de coletável adicionado
-    contadores_coletaveis[tipo] += 1
-
-# Classe de Coletáveis
 class Coletaveis(pygame.sprite.Sprite):
-
     def __init__(self, imagem, tipo):
         pygame.sprite.Sprite.__init__(self)
         self.lista = []
-        self.index = 0 
+        self.index = 0
         self.taxa_quadros = 0.2
         self.time = 0
         self.tipo = tipo
@@ -109,7 +82,7 @@ class Coletaveis(pygame.sprite.Sprite):
         self.image = self.lista[self.index]
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
-        self.rect.topleft = (600, 450)
+        self.rect.topleft = (600, 450)  # Posição inicial
 
     def update(self, delta_time):
         self.time += delta_time
@@ -119,9 +92,46 @@ class Coletaveis(pygame.sprite.Sprite):
             if self.index >= len(self.lista):
                 self.index = 0
             self.image = self.lista[int(self.index)]
-        if self.rect.topright[0] < 0:
-            self.rect.x = largura_tela
+        
+        # Mover o coletável para a esquerda
         self.rect.x -= 10
+        
+        # Se o coletável saiu da tela, reinicie a posição
+        if self.rect.right < 0:
+            self.kill()  # Remove o coletável do grupo
+
+def adicionar_coletavel():
+    if len(coletaveis_ativos) > 2:
+        return 
+
+    imagens_coletaveis = [cuscuz, cuscuz_paulista, pitu]
+    tipos_coletaveis = ["cuscuz", "cuscuz_paulista", "pitu"]
+
+    # Filtrando os tipos que ainda não atingiram o mínimo de aparições
+    tipos_disponiveis = [tipo for tipo in tipos_coletaveis if contadores_coletaveis[tipo] < min_aparicoes]
+    if not tipos_disponiveis:
+        # Se todos os tipos já atingiram o mínimo, permitimos todos
+        tipos_disponiveis = tipos_coletaveis
+
+    index = random.randint(0, len(tipos_disponiveis) - 1)
+    tipo = tipos_disponiveis[index]
+    imagem = imagens_coletaveis[tipos_coletaveis.index(tipo)]
+    novo_coletavel = Coletaveis(imagem, tipo)
+    
+    # Definindo uma faixa de altura acessível para os coletáveis
+    altura_minima = 250  # Ajuste conforme a altura mínima que o jogador pode alcançar
+    altura_maxima = 500  # Ajuste conforme a altura máxima que o jogador pode alcançar
+    
+    nova_posicao_x = random.randint(largura_tela, largura_tela + 200)  # Fora da tela à direita
+    nova_posicao_y = random.randint(altura_minima, altura_maxima)  # Dentro dos limites de altura acessível
+    
+    novo_coletavel.rect.topleft = (nova_posicao_x, nova_posicao_y)
+    coletaveis_ativos.add(novo_coletavel)
+
+    # Incrementa o contador do tipo de coletável adicionado
+    contadores_coletaveis[tipo] += 1
+
+
 
 # Classe do jogador
 class Tuba(pygame.sprite.Sprite):
@@ -133,7 +143,7 @@ class Tuba(pygame.sprite.Sprite):
         #sons e seus determinados volumes
         self.som_pulo = pygame.mixer.Sound(os.path.join(diretorio_sons,'pulo.wav'))
         self.som_pulo.set_volume(0.45)
-        self.som_buff = pygame.mixer.Sound(os.path.join(diretorio_sons,'coletar.wav'))
+        self.som_buff = pygame.mixer.Sound(os.path.join(diretorio_sons,'coleta2.wav'))
         self.som_buff.set_volume(0.28)
         self.som_debuff = pygame.mixer.Sound(os.path.join(diretorio_sons, 'coleta_ruim2.wav'))
         self.som_debuff.set_volume(0.28)
@@ -219,9 +229,10 @@ def main():
     scroll = 0
     tiles = math.ceil(largura_tela / bg_width) + 1
     n_ponte = 0
-    ponte_final = 20
+    ponte_final = 120
     vidas = 3
     som_vitoria_tocado = False
+    som_derrota_tocado = False
     tempo_ultimo_coletavel = 0
     points = 0
     fonte = pygame.font.Font('freesansbold.ttf', 21)
@@ -304,6 +315,7 @@ def main():
             for colisao in colisoes:
                 if colisao.tipo == "cuscuz":
                     qtd_cuscuz += 1
+                    vidas += 1
                     jogador.som_buff.play()
                     buff_ativo = True
                     print(f"Cuscuz coletado: {qtd_cuscuz}")
@@ -346,9 +358,7 @@ def main():
             # Cutscene em caso de Game Over
             if vidas <= 0:
                 game_over=True
-            if game_over:
-                game_over_img = pygame.image.load(os.path.join(diretorio_imagens, 'game-over.png'))
-                tela.blit(game_over_img, (0, 0))
+            
 
         # Cutscene final
         elif n_ponte > ponte_final:
@@ -358,6 +368,16 @@ def main():
             if not som_vitoria_tocado:
                 som_vitoria.play()
                 som_vitoria_tocado = True
+
+        if game_over:
+            game_over_img = pygame.image.load(os.path.join(diretorio_imagens, 'game-over.png'))
+            tela.blit(game_over_img, (0, 0))
+            pygame.mixer.music.stop()
+            if not som_derrota_tocado:
+                som_derrota.play()
+                som_derrota_tocado = True
+
+
 
         pygame.display.flip()
 
