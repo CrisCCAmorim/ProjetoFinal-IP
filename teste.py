@@ -17,8 +17,9 @@ pygame.init()
 #musica de fundo 
 musica_fundo = pygame.mixer.music.load(os.path.join(diretorio_sons, 'musica_fundo.mp3'))
 pygame.mixer.music.set_volume(0.25)
-pygame.mixer.music.play(-1)
+#pygame.mixer.music.play(-1)
 som_vitoria = pygame.mixer.Sound(os.path.join(diretorio_sons,'success-fanfare-trumpets-6185(1).wav'))
+som_derrota  = pygame.mixer.Sound(os.path.join(diretorio_sons, 'game over - sound effect.mp3'))
 
 #Criando a tela e suas configurações
 altura_tela = 692
@@ -69,7 +70,7 @@ def adicionar_coletavel():
         return
 
     imagens_coletaveis = [cuscuz, cuscuz_paulista, pitu]
-    tipos_coletaveis = ["boloderolo", "caldodecana", "cuscuz", "cuscuz_paulista", "pitu", "rocambole"]
+    tipos_coletaveis = ["cuscuz", "cuscuz_paulista", "pitu"]
     index = random.randint(0, len(imagens_coletaveis) - 1)
     imagem = imagens_coletaveis[index]
     tipo = tipos_coletaveis[index]
@@ -221,8 +222,8 @@ def main():
         text_score = fonte.render('Score: ' + str(points), True, (0, 0, 0))
         tela.blit(text_score, (15, 10))
 
-    while run: #loop principal
-        delta_time = relogio.tick(30) / 1000.0 #tempo decorrido em segundos
+    while run:  # loop principal
+        delta_time = relogio.tick(30) / 1000.0  # tempo decorrido em segundos
 
         for event in pygame.event.get():  # Para fechar a janela do jogo
             if event.type == QUIT:
@@ -240,7 +241,7 @@ def main():
         # Reset scroll
         if abs(scroll) > bg_width:
             scroll = 0
-            if game_over == False:
+            if not game_over:
                 n_ponte += 1  # Contando quantas pontes se passaram
                 print(n_ponte)
 
@@ -255,15 +256,13 @@ def main():
             keys_pressed = pygame.key.get_pressed()
             if keys_pressed[pygame.K_SPACE]:
                 jogador.pular()
-                #som_pulo.play()
 
             if keys_pressed[pygame.K_s]:
                 jogador.agachar()
-
             else:
                 jogador.levantar()
 
-            #adiciona um novo coletavel quando necessário
+            # adiciona um novo coletavel quando necessário
             tempo_ultimo_coletavel += delta_time
             if tempo_ultimo_coletavel >= tempo_para_adicionar_coletaveis:
                 tempo_ultimo_coletavel = 0
@@ -275,31 +274,33 @@ def main():
                 if colisao.tipo == "cuscuz":
                     qtd_cuscuz += 1
                     jogador.som_buff.play()
+                    print(f"Cuscuz coletado: {qtd_cuscuz}")
                 elif colisao.tipo == "pitu":
                     qtd_pitu += 1
                     jogador.som_debuff.play()
+                    print(f"Pitu coletado: {qtd_pitu}")
                 elif colisao.tipo == "cuscuz_paulista":
                     qtd_cuscuzpaulista += 1
                     jogador.som_debuff.play()
-                print(f"Cuscuz: {qtd_cuscuz}, Pitu: {qtd_pitu}, Cuscuz Paulista: {qtd_cuscuzpaulista}")
+                    print(f"Cuscuz Paulista coletado: {qtd_cuscuzpaulista}")
 
             # Desenhando a UI
-            score(tela, points)            # score
+            score(tela, points)  # score
             points += 1
 
-            draw_text(str(vidas), text_font, text_color_life, 1120, 40)      # quantidade de vidas
+            draw_text(str(vidas), text_font, text_color_life, 1120, 40)  # quantidade de vidas
             coracao_vidas = pygame.image.load(os.path.join(diretorio_imagens, 'coracao-vidas.png')).convert_alpha()
             tela.blit(coracao_vidas, (largura_tela - 195 * 1.2, 0))
 
-            draw_text(str(qtd_cuscuz), text_font, (0,0,0), 250, 20)     # quantidade de cuscuz coletado
+            draw_text(str(qtd_cuscuz), text_font, (0, 0, 0), 250, 20)  # quantidade de cuscuz coletado
             cuscuz_UI = cuscuz.subsurface((100, 0), (100, 100))
             tela.blit(cuscuz_UI, (150, 0))
 
-            draw_text(str(qtd_pitu), text_font, (0,0,0), 400, 20)     # quantidade de pitu coletada
+            draw_text(str(qtd_pitu), text_font, (0, 0, 0), 400, 20)  # quantidade de pitu coletada
             pitu_UI = pitu.subsurface((100, 0), (100, 100))
             tela.blit(pitu_UI, (300, 0))
 
-            draw_text(str(qtd_cuscuzpaulista), text_font, (0,0,0), 550, 20)     # quantidade de cuscuz paulista coletado
+            draw_text(str(qtd_cuscuzpaulista), text_font, (0, 0, 0), 550, 20)  # quantidade de cuscuz paulista coletado
             cuscuzpaulista_UI = cuscuz_paulista.subsurface((100, 0), (100, 100))
             tela.blit(cuscuzpaulista_UI, (450, 0))
 
@@ -309,7 +310,7 @@ def main():
                 tela.blit(linha_chegada, (largura_tela + scroll, 500))
 
             # Cutscene em caso de Game Over
-            if game_over == True:
+            if game_over:
                 game_over_img = pygame.image.load(os.path.join(diretorio_imagens, 'game-over.png'))
                 tela.blit(game_over_img, (0, 0))
 
@@ -323,5 +324,6 @@ def main():
                 som_vitoria_tocado = True
 
         pygame.display.flip()
+
 
 main()
