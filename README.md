@@ -1,5 +1,5 @@
 # Recin Run
-Jogo 2D, sidescroller, de corrida, feito como projeto final da disciplina de Introdução à programação no período de 2024.1. A proposta do jogo é simular uma corrida nas ruas do Recife, em que o personagem principal, Tuba, deve coletar itens que vão o deixar mais veloz e desviar de itens que vão ou o atrasar, ou fazê-lo perder vidas.
+Jogo 2D, sidescroller, de corrida, feito como projeto final da disciplina de Introdução à programação no período de 2024.1. A proposta do jogo é simular uma corrida nas ruas do Recife, semelhante a realidade, pois sempre acontecem corridas no recife, e a ideia do nosso jogo foi baseada na meia maratona "Eu Amo Recife", que é no marco zero e passa pela rua da Aurora e suas pontes, que baseou o cenário do jogo, em que o personagem principal, Tuba, deve coletar itens que vão o deixar mais veloz e desviar de itens que vão ou o atrasar, ou fazê-lo perder vidas.
 
 Item benéfico: 
 - Cuscuz: Aumenta sua velocidade durante 5 segundos.
@@ -42,5 +42,5 @@ Posicionando a linha de chegada;
 Lógica das colisões e alteração do placar.
 
 # Desafios e aprendizados
-Como desafios, podemos destacar a gestão de tempo, tendo em vista o tempo limitado e a atenção que outras disciplinas exigiram paralelamente; a coordenação e divisão de tarefas, visto que todas não estavam habituadas com as mesmas ferramentas de gestão de projetos; a menutenção de um código limpo e organizado, o que foi solucionado com uma quantidade satisfatória de comentários; a utilização do GitHub de maneira colaborativa.
+Como desafios, podemos destacar a gestão de tempo, tendo em vista o tempo limitado e a atenção que outras disciplinas exigiram paralelamente; a coordenação e divisão de tarefas, visto que todas não estavam habituadas com as mesmas ferramentas de gestão de projetos; a manutenção de um código limpo e organizado, o que foi solucionado com uma quantidade satisfatória de comentários; a utilização do GitHub de maneira colaborativa.
 Como aprendizados, observamos uma boa redistribuição de tarefas, quando necessário; a exploração da biblioteca pygame e da POO;
