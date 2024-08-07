@@ -100,7 +100,13 @@ class Coletaveis(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()  # Remove o coletável do grupo
 
+
+primeiro_coletavel_adicionado = False
+
+
 def adicionar_coletavel():
+    global primeiro_coletavel_adicionado
+
     if len(coletaveis_ativos) > 2:
         return 
 
@@ -124,12 +130,19 @@ def adicionar_coletavel():
     
     nova_posicao_x = random.randint(largura_tela, largura_tela + 200)  # Fora da tela à direita
     nova_posicao_y = random.randint(altura_minima, altura_maxima)  # Dentro dos limites de altura acessível
+
+    # Garantir que o primeiro coletável não apareça muito perto do jogador
+    if not primeiro_coletavel_adicionado:
+        while nova_posicao_x < 600 + 300 and nova_posicao_x > 500:  # Ajuste 500 + 300 conforme o tamanho do jogador
+            nova_posicao_x = random.randint(largura_tela, largura_tela + 200)
+
     
     novo_coletavel.rect.topleft = (nova_posicao_x, nova_posicao_y)
     coletaveis_ativos.add(novo_coletavel)
 
     # Incrementa o contador do tipo de coletável adicionado
     contadores_coletaveis[tipo] += 1
+    primeiro_coletavel_adicionado = True
 
 
 
@@ -214,14 +227,17 @@ class Tuba(pygame.sprite.Sprite):
 
 
 def main():
-    global tempo_ultimo_coletavel
+    global tempo_ultimo_coletavel, primeiro_coletavel_adicionado
 
     # Looping do jogo
     sprites_player = pygame.sprite.Group()
     jogador = Tuba()
     sprites_player.add(jogador)
-    coletaveis_ativos.add(Coletaveis(pitu, "pitu"))
-    
+
+    # Adiciona um primeiro coletável longe do jogador
+    primeiro_coletavel_adicionado = False
+    adicionar_coletavel()  # Garante que o primeiro coletável não esteja muito perto    
+
     # Inicialização das variáveis
     run = True
     game_over = False
