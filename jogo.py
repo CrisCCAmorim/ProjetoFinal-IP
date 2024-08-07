@@ -16,7 +16,7 @@ pygame.init()
 
 #musica de fundo 
 musica_fundo = pygame.mixer.music.load(os.path.join(diretorio_sons, 'musica_fundo.mp3'))
-pygame.mixer.music.set_volume(0.25)
+pygame.mixer.music.set_volume(0.30)
 pygame.mixer.music.play(-1)
 som_vitoria = pygame.mixer.Sound(os.path.join(diretorio_sons,'success-fanfare-trumpets-6185(1).wav'))
 som_vitoria.set_volume(0.50)
@@ -245,7 +245,7 @@ def main():
     scroll = 0
     tiles = math.ceil(largura_tela / bg_width) + 1
     n_ponte = 0
-    ponte_final = 120
+    ponte_final = 90
     vidas = 3
     som_vitoria_tocado = False
     som_derrota_tocado = False
